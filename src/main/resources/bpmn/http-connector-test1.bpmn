@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1mi60d5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.10.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process  name="HubHttpConnector Example" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_03lyzvz</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_03lyzvz" sourceRef="StartEvent_1" targetRef="Activity_1f2kgjg" />
+    <bpmn:serviceTask id="Activity_1f2kgjg" name="Http Request">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="url">v1/pricing/share-fractions/</camunda:inputParameter>
+            <camunda:inputParameter name="payload">${"{\"home_value\":1000000,\"investment_amount\":100000}"}</camunda:inputParameter>
+            <camunda:outputParameter name="share_fractions">${S(response)}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>hub-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_03lyzvz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tx409m</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1tx409m" sourceRef="Activity_1f2kgjg" targetRef="Activity_1lu1znj" />
+    <bpmn:userTask id="Activity_1lu1znj" name="Inspect response">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_1tx409m</bpmn:incoming>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="Event_0rncwzj" attachedToRef="Activity_1f2kgjg">
+      <bpmn:outgoing>Flow_07eezc7</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_03kymfy" errorRef="Error_04geajt" camunda:errorCodeVariable="error_code" camunda:errorMessageVariable="error_message" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_07eezc7" sourceRef="Event_0rncwzj" targetRef="Activity_0dzxx8a" />
+    <bpmn:userTask id="Activity_0dzxx8a" name="Inspect Exception">
+      <bpmn:incoming>Flow_07eezc7</bpmn:incoming>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmn:error id="Error_04geajt" name="REQUEST_FAILED" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0thtk0t">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00lz6l7_di" bpmnElement="Activity_1f2kgjg">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0lyg9gt_di" bpmnElement="Activity_1lu1znj">
+        <dc:Bounds x="430" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0bg7hww_di" bpmnElement="Activity_0dzxx8a">
+        <dc:Bounds x="430" y="180" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1a1slqa_di" bpmnElement="Event_0rncwzj">
+        <dc:Bounds x="302" y="139" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_03lyzvz_di" bpmnElement="Flow_03lyzvz">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tx409m_di" bpmnElement="Flow_1tx409m">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="430" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07eezc7_di" bpmnElement="Flow_07eezc7">
+        <di:waypoint x="320" y="175" />
+        <di:waypoint x="320" y="220" />
+        <di:waypoint x="430" y="220" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
